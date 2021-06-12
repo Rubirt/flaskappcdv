@@ -1,0 +1,170 @@
+<!doctype html>
+	<html lang="en">
+	<head>
+		<!-- Required meta tags -->
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+		<!-- Bootstrap CSS -->
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+		<title>Analiza</title>
+	</head>
+	<body>
+		<nav class="navbar navbar-expand-md navbar-dark bg-dark">
+			<a class="navbar-brand" href="#">Robert Sołdyński App</a>
+			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav">
+			  <span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="navbarNav">
+			  <ul class="navbar-nav mr-auto">
+				  <li class="nav-item active">
+					  <a class="nav-link" href="{{ url_for('index') }}">Home <span class="sr-only">(current)</span></a>
+				  </li>
+			  </ul>
+			</div>
+		  </nav>
+		<div class="mt-5">
+
+			{% with messages = get_flashed_messages(with_categories=true) %}
+			{% if messages %}
+			{% for category, message in messages %}
+			<div class="alert alert-{{ category }} alert-dismissible" role="alert">
+				<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<!-- <strong>Title</strong> --> {{ message }}
+			</div>
+			{% endfor %}
+			{% endif %}
+			{% endwith %}
+
+			<div class="container">
+				<h1>Informacje o załadowanym Pliku</h1>
+				<p>Nazwa Pliku: {{filedata.filename}}</p>
+				<p>Rozmiar Pliku: {{filedata.size}}</p>
+				<p>Ilość Kolumn: {{filedata.columns}}</p>
+				<p>Ilość Wierszy: {{filedata.rows}}</p>
+			</div>
+
+			<div class=" container-fluid mt-5">
+				{%if not dfobj.empty%}
+				<div class="">
+					<div class="table-wrapper">
+						<div class="table-title">
+							<div class="row">
+								<div class="col-sm-8"><h2>Dane Podstawowe</h2></div>
+							</div>
+						</div>
+						<table class="table table-bordered">
+							<thead>
+								<tr>
+									<th scope="col">Nazwa Kolumny</th>
+									<th scope="col">Typ Danych</th>
+									<th scope="col">liczba wartości unikalnych</th>
+									<th scope="col">liczba wartości pustych</th>
+									<th scope="col">Liczba wartości NaN</th>
+								</tr>
+							</thead>
+							<tbody>
+								{% for key,value in dfobj.iterrows() %}
+								<tr>
+									<td>{{value['Column']}}</td>
+									<td>{{value['Type']}}</td>
+									<td>{{value['Unique']}}</td>
+									<td>{{value['IsNul']}}</td>
+									<td>{{value['NaNs']}}</td>
+								</tr>
+								{% endfor %}
+							</tbody>
+						</table>
+					</div>
+				</div>
+				{%endif%}
+
+				{%if not dfdat.empty%}
+
+				<div class="">
+					<div class="table-wrapper">
+						<div class="table-title">
+							<div class="row">
+								<div class="col-sm-8"><h2>Date Data</h2></div>
+							</div>
+						</div>
+						<table class="table table-bordered">
+							<thead>
+								<tr>
+									<th scope="col">Column Name</th>
+									<th scope="col">Data Type</th>
+									<th scope="col">First Data</th>
+									<th scope="col">Last Date</th>
+								</tr>
+							</thead>
+							<tbody>
+								{% for key,value in dfdat.iterrows() %}
+								<tr>
+									<td>{{value['Column']}}</td>
+									<td>{{value['Type']}}</td>
+									<td>{{value['First Date']}}</td>
+									<td>{{value['Last Date']}}</td>
+								</tr>
+								{% endfor %}
+							</tbody>
+						</table>
+					</div>
+				</div>
+				{%endif%}
+				{%if not dfnum.empty%}
+				<div class="">
+					<div class="table-wrapper">
+						<div class="table-title">
+							<div class="row">
+								<div class="col-sm-8"><h2>Dane Szczegółowe</h2></div>
+							</div>
+						</div>
+						<table class="table table-bordered">
+							<thead>
+								<tr>
+									<th scope="col">Nazwa Kolumny</th>
+									<th scope="col">Typ Danych</th>
+									<th scope="col">Wartość Minimalna</th>
+									<th scope="col">Wartość Średnia</th>
+									<th scope="col">Wartość Maxymalna</th>
+									<th scope="col">Mediana</th>
+									<th scope="col">Odchylenie Standardowe</th>
+									<th scope="col">Histogram</th>
+								</tr>
+							</thead>
+							<tbody>
+								{% for key,value in dfnum.iterrows() %}
+								<tr>
+									<td>{{value['Column']}}</td>
+									<td>{{value['Type']}}</td>
+									<td>{{value['Min']}}</td>
+									<td>{{value['Average']}}</td>
+									<td>{{value['Max']}}</td>
+									<td>{{value['Median']}}</td>
+									<td>{{value['Standard Deviation']}}</td>
+									<td><img style="width: 70%;" src="{{value['Histogram']}}"></td>
+								</tr>
+								{% endfor %}
+							</tbody>
+						</table>
+					</div>
+				</div>
+				{%endif%}
+				
+			</div>
+
+
+		</div>
+
+
+		
+		<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+		<script type="text/javascript">
+			$(".dataframe").addClass('table table-striped table-bordered table-hover');
+
+		</script>
+	</body>
+	</html>
